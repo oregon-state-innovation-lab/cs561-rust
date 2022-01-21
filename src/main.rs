@@ -24,7 +24,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let client = reqwest::Client::new();
 
     let response = client
-        .get("https://api.openweathermap.org/data/2.5/weather?q=corvallis&appid=b98e3f089c86867862f28236d174368a&&units=imperial")
+        .get("http://localhost:3000/data/2.5/weather")
         .send()
         .await?;
 
