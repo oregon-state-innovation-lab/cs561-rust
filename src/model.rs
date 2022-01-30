@@ -15,3 +15,9 @@ pub struct Weather {
 pub struct Main {
     temp: f64,
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Token {
+    #[serde(rename = "access-token")]
+    pub token: String,
+}
