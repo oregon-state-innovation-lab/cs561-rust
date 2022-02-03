@@ -23,13 +23,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Now that we know we can deserialize a hard-coded JSON into a struct model,
     // let's see if we can fetch the weather from the backend.
     //
-
+    
+    //the fake user in the user database to revieve auth token.
     let mut map = HashMap::new();
     map.insert("username", "bharath");
     map.insert("password", "pass");
 
-    let client = reqwest::Client::new();
 
+    //auth endpoint, this is the post request and will return an auth token to
+    //the user, will be basis for the hello and weather endpoints. 
+    let client = reqwest::Client::new();
     let res = client.post("http://localhost:3000/v1/auth")
         .json(&map)
         .send()
@@ -39,7 +42,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .await?;
     println!("\nToken from backend service:\n {:?}\n", auth_token);
     let header_value = format!("Bearer {}", auth_token.accessToken);
-    
+
+
+    //The hello endpoint, need to clone the auth so the weather request can
+    //pass it to the server aswell
     let client2 = reqwest::Client::new();
 
     let hello_res = client2.get("http://localhost:3000/v1/hello")
@@ -54,8 +60,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Hello from Node Backend:\n {:?}\n", hello_message);
     
 
-    
-
+    //The weather endpoint, uses the cloned auth from the previous hello
+    //request to get the current weather from the node server
     let client3 = reqwest::Client::new();
 
     let weather_res = client3.get("http://localhost:3000/v1/weather")
