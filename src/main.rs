@@ -1,4 +1,7 @@
+use std::collections::HashMap;
+use reqwest::header::AUTHORIZATION;
 mod model;
+
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -21,18 +24,51 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // let's see if we can fetch the weather from the backend.
     //
 
+    let mut map = HashMap::new();
+    map.insert("username", "bharath");
+    map.insert("password", "pass");
+
     let client = reqwest::Client::new();
 
-    let response = client
-        .get("https://api.openweathermap.org/data/2.5/weather?q=corvallis&appid=b98e3f089c86867862f28236d174368a&&units=imperial")
+    let res = client.post("http://localhost:3000/v1/auth")
+        .json(&map)
         .send()
         .await?;
+    let auth_token = res
+        .json::<model::Token>()
+        .await?;
+    println!("\nToken from backend service:\n {:?}\n", auth_token);
+    let header_value = format!("Bearer {}", auth_token.accessToken);
+    
+    let client2 = reqwest::Client::new();
 
-    let weather2 = response
+    let hello_res = client2.get("http://localhost:3000/v1/hello")
+        .header(AUTHORIZATION, header_value.clone())
+        .send()
+        .await?;
+    
+    let hello_message = hello_res
+        .json::<model::Hello>()
+        .await?;
+
+    println!("Hello from Node Backend:\n {:?}\n", hello_message);
+    
+
+    
+
+    let client3 = reqwest::Client::new();
+
+    let weather_res = client3.get("http://localhost:3000/v1/weather")
+        .header(AUTHORIZATION, header_value)
+        .send()
+        .await?;
+    
+    let weather_message = weather_res
         .json::<model::Weather>()
         .await?;
 
-    println!("\nWeather from openweathermap.org:\n {:?}", weather2);
+    println!("\nWeather from Node Backend:\n {:?}\n", weather_message);
+
 
     Ok(())
 }
