@@ -6,6 +6,8 @@ use crate::model::SiteUser;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
+    // using aws ec2 instance
+    
     let client = reqwest::Client::new();
     let u = SiteUser{
         username: "joe".into(),

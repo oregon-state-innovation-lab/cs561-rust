@@ -16,7 +16,7 @@ pub struct Main {
     temp: f64,
 }
 
-// token main entry structure
+// token main entry stru cture
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Token {
     pub main: TokenMain,
