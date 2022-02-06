@@ -13,7 +13,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     let response = client
-        .post("http://localhost:3000/v1/auth/")
+        .post("http://55.55.131.241:3000/v1/auth/")
         .json(&u)
         .send()
         .await?;
@@ -28,7 +28,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // check weather response
     let weather_response = client
-        .get("http://localhost:3000/v1/weather/")
+        .get("http://55.55.131.241:3000/v1/weather/")
         .header(AUTHORIZATION, token)
         .send()
         .await?;
@@ -43,7 +43,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // check hello world response
     let hello_token = "Bearer ".to_owned() + &auth_json.main.token;
     let hello_response = client
-        .get("http://localhost:3000/v1/hello/")
+        .get("http://55.55.131.241:3000/v1/hello/")
         .header(AUTHORIZATION, hello_token)
         .send()
         .await?;
