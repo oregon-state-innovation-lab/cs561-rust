@@ -16,6 +16,7 @@ pub struct Main {
     temp: f64,
 }
 
+// token main entry structure
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Token {
     pub main: TokenMain,
@@ -27,12 +28,14 @@ pub struct TokenMain {
     pub token: String,
 }
 
+// auth login structure
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SiteUser {
     pub username: String,
     pub password: String,
 }
 
+// greeting main entry structure
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Hello {
     pub main: HelloMain,
