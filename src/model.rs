@@ -21,7 +21,7 @@ pub struct Token {
     pub main: TokenMain,
 }
 
-
+// high level structure for token response
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TokenMain {
     pub token: String,
@@ -33,6 +33,7 @@ pub struct SiteUser {
     pub password: String,
 }
 
+// high level structure for hello response
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Hello {
     pub main: HelloMain,
