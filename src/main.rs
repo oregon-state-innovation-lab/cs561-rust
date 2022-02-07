@@ -1,4 +1,6 @@
 mod model;
+use std::collections::HashMap;
+use reqwest::header::AUTHORIZATION;
 
 #[tokio::main]
 #small change to rust file
@@ -22,18 +24,56 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // let's see if we can fetch the weather from the backend.
     //
 
-    let client = reqwest::Client::new();
+    // Authorize user
+    let mut map = HashMap::new();
+    map.insert("username", "John");
+    map.insert("password", "Doe");
 
-    let response = client
-        .get("https://api.openweathermap.org/data/2.5/weather?q=corvallis&appid=b98e3f089c86867862f28236d174368a&&units=imperial")
+    let client1 = reqwest::Client::new();
+    let response1 = client1
+        .post("http://localhost:3000/v1/auth")
+        .json(&map)
+        .send()
+        .await?;
+    let acc_token = response1
+        .json::<model::Auth>()
+        .await?;
+    println!("\nAccess token:\n {:?}", acc_token.accesstoken);
+    let _header_value = format!("Bearer {}", acc_token.accesstoken);
+
+    // Now that we know we can deserialize a hard-coded JSON into a struct model,
+    // let's see if we can fetch the weather from the backend.
+    //
+    // .get("https://api.openweathermap.org/data/2.5/weather?q=corvallis&appid=[INSERT_API_KEY_HERE}")
+
+    let client2 = reqwest::Client::new();
+
+    let response2 = client2
+        .get("http://localhost:3000/v1/weather")
+        .header(AUTHORIZATION, _header_value.clone())
         .send()
         .await?;
 
-    let weather2 = response
+    let weather2 = response2
         .json::<model::Weather>()
         .await?;
 
-    println!("\nWeather from openweathermap.org:\n {:?}", weather2);
+    println!("\nWeather from mock server:\n {:?}", weather2.main.temp);
 
+    // Get greeting
+    
+    let client3 = reqwest::Client::new();
+
+    let response3 = client3
+        .get("http://localhost:3000/v1/hello")
+        .header(AUTHORIZATION, _header_value.clone())
+        .send()
+        .await?;
+      
+    let greeting = response3
+        .json::<model::Hello>()
+        .await?;
+
+    println!("\nGreeting: \n {:?}", greeting.greeting);
     Ok(())
 }
