@@ -10,7 +10,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
               }
             }
         "#;
-
+//hi
   // Deserialize the hardcoded JSON into a Weather struct
   let weather1: model::Weather = serde_json::from_str(json).unwrap();
 
